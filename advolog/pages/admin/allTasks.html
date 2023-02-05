@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="../../">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <title>Home</title>
+</head>
+
+<body>
+
+    <!-- activity -->
+    <div class="d-flex flex-column vh-100">
+
+        <!-- header -->
+        <div class="d-flex align-items-center bg-light border-bottom shadow-sm p-3">
+            <a href="pages/admin/" class="material-icons-round text-decoration-none">arrow_back</a>
+            <div class="m-0 mx-3 h4">Tasks</div>
+            <div class="flex-grow-1"></div>
+            <a class="material-icons-round text-decoration-none">more_vert</a>
+        </div>
+
+        <!-- body -->
+        <div class="d-flex flex-column flex-grow-1">
+            <div class="m-3 mb-0">
+                <select name="taskSort" id="taskSort" class="form-select" onchange="renderTasks()">
+                    <option value="all">All Tasks</option>
+                    <option value="pending">Only Pending</option>
+                    <option value="processing">Only Processing</option>
+                    <option value="finished">Only Finished</option>
+                </select>
+            </div>
+            <div class="m-3">
+                <select name="taskSortByEmployee" id="taskSortByEmployee" class="form-select" onchange="renderTasks()">
+                    <option value="all">All Employees</option>
+                </select>
+            </div>
+            <div>
+                <div id="tasksWrapper" class="list-group list-group-flush border-bottom scrollarea">
+                    <!--
+                    <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <strong class="mb-1">Task Name</strong>
+                            <small class="text-danger">Pending</small>
+                        </div>
+                        <div class="col-10 small">Under: Employee</div>
+                        <div class="col-10 small">Date: 13/12/2021</div>
+                        <div class="col-10 small">Paid: 200</div>
+                    </a>
+                    -->
+                </div>
+            </div>
+        </div>
+
+        <div class="viewTaskWrapper" onclick="viewTaskToggle()">
+            <div class="viewTask bg-light shadow p-3">
+
+                <strong id="holderTaskTitle">Title</strong>
+                <div class="border-bottom my-2"></div>
+
+                <div>
+                    <strong>Assigned To: </strong>
+                    <span id="holderTaskAssignedToName"></span>
+                </div>
+                <div>
+                    <strong>Status: </strong>
+                    <span id="holderTaskStatus"></span>
+                </div>
+                <div>
+                    <strong>Created On: </strong>
+                    <span id="holderTaskCreatedOn"></span>
+                </div>
+                <div>
+                    <strong>Payment: </strong>
+                    <span id="holderTaskPayment"></span>
+                </div>
+                <div>
+                    <strong>Customer Name: </strong>
+                    <span id="holderTaskCustomerName"></span>
+                </div>
+                <div>
+                    <strong>Customer Phone: </strong>
+                    <span id="holderTaskCustomerPhone"></span>
+                </div>
+                <div class="border-bottom my-2"></div>
+                <div class="d-flex">
+                    <div class="flex-grow-1"></div>
+                    <a href="pages/admin/editTask.html" class="btn btn-outline-dark m-1">Edit</a>
+                    <button class="btn btn-outline-dark m-1">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="assets/js/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+
+        var allTasksArray;
+
+        function renderTask(title, status, under, date, paid, uuid) {
+            if (status == "Pending") statusColor = "text-danger";
+            if (status == "Processing") statusColor = "text-primary";
+            if (status == "Finished") statusColor = "text-success";
+            $("#tasksWrapper").append("<a href=\"javascript:openTask('" + uuid + "')\" class=\"list-group-item list-group-item-action py-3 lh-tight\"> <div class=\"d-flex w-100 align-items-center justify-content-between\"> <strong class=\"mb-1\">" + title + "</strong> <small class=\"" + statusColor + "\">" + status + "</small> </div> <div class=\"col-10 small\">Under: " + under + "</div> <div class=\"col-10 small\">Date: " + date + "</div> <div class=\"col-10 small\">Paid: " + paid + "</div> </a>");
+
+        }
+
+        function renderTasks() {
+            $("#tasksWrapper").empty();
+            if ($("#taskSortByEmployee").val() == "all") {
+                if ($("#taskSort").val() == "all") allTasksArray.forEach(e => { renderTask(e["title"], e["status"], e["assigned_to_name"], e["created_on"], e["payment"], e["uuid"]); });
+                else if ($("#taskSort").val() == "pending") allTasksArray.forEach(e => { if (e["status"] == "Pending") renderTask(e["title"], e["status"], e["assigned_to_name"], e["created_on"], e["payment"], e["uuid"]); });
+                else if ($("#taskSort").val() == "processing") allTasksArray.forEach(e => { if (e["status"] == "Processing") renderTask(e["title"], e["status"], e["assigned_to_name"], e["created_on"], e["payment"], e["uuid"]); });
+                else if ($("#taskSort").val() == "finished") allTasksArray.forEach(e => { if (e["status"] == "Finished") renderTask(e["title"], e["status"], e["assigned_to_name"], e["created_on"], e["payment"], e["uuid"]); });
+            } else {
+                if ($("#taskSort").val() == "all") allTasksArray.forEach(e => { if ($("#taskSortByEmployee").val() == e["assigned_to"]) renderTask(e["title"], e["status"], e["assigned_to_name"], e["created_on"], e["payment"], e["uuid"]); });
+                else if ($("#taskSort").val() == "pending") allTasksArray.forEach(e => { if (e["status"] == "Pending" && $("#taskSortByEmployee").val() == e["assigned_to"]) renderTask(e["title"], e["status"], e["assigned_to_name"], e["created_on"], e["payment"], e["uuid"]); });
+                else if ($("#taskSort").val() == "processing") allTasksArray.forEach(e => { if (e["status"] == "Processing" && $("#taskSortByEmployee").val() == e["assigned_to"]) renderTask(e["title"], e["status"], e["assigned_to_name"], e["created_on"], e["payment"], e["uuid"]); });
+                else if ($("#taskSort").val() == "finished") allTasksArray.forEach(e => { if (e["status"] == "Finished" && $("#taskSortByEmployee").val() == e["assigned_to"]) renderTask(e["title"], e["status"], e["assigned_to_name"], e["created_on"], e["payment"], e["uuid"]); });
+            }
+        }
+
+        function viewTaskToggle() {
+
+            $(".viewTaskWrapper").toggleClass("viewTaskWrapperActive");
+            data = JSON.parse(localStorage.getItem("active_task"));
+            $("#holderTaskTitle").html(data["title"]);
+            $("#holderTaskCustomerName").html(data["customer_name"]);
+            $("#holderTaskCustomerPhone").html(data["customer_phone"]);
+            $("#holderTaskAssignedToName").html(data["assigned_to_name"]);
+            $("#holderTaskCreatedOn").html(data["created_on"]);
+            $("#holderTaskStatus").html(data["status"]);
+            $("#holderTaskPayment").html(data["payment"]);
+        }
+
+        function openTask(uuid) {
+            allTasksArray.forEach(e => {
+                if (e["uuid"] == uuid) {
+                    localStorage.setItem("active_task", JSON.stringify(e));
+                    viewTaskToggle();
+                }
+            })
+        }
+
+        $.ajax({
+            url: "/advolog-backend/tasks.php",
+            type: "post",
+            data: {
+                allEmployees: 1
+            },
+            success: function (d) {
+                d = JSON.parse(d);
+                d.forEach(element => {
+                    $("#taskSortByEmployee").append("<option value=\"" + element["email"] + "\">" + element["name"] + "</option>");
+                    console.log(element);
+                });
+            }
+        });
+
+        $.ajax({
+            url: "/advolog-backend/tasks.php",
+            type: "post",
+            data: {
+                allTasks: 1
+            },
+            success: function (d) {
+                try {
+                    d = JSON.parse(d);
+                    allTasksArray = d;
+                    allTasksArray.reverse();
+                    renderTasks();
+                    console.log(d);
+                } catch (error) {
+                    console.log(d);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

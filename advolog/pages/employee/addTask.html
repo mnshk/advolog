@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="../../">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <title>Home</title>
+</head>
+
+<body>
+
+    <!-- activity -->
+    <div class="d-flex flex-column vh-100">
+
+        <!-- header -->
+        <div class="d-flex align-items-center bg-light border-bottom shadow-sm p-3">
+            <a href="pages/employee/" class="material-icons-round text-decoration-none">arrow_back</a>
+            <div class="m-0 mx-3 h4">Add Task</div>
+            <div class="flex-grow-1"></div>
+            <a class="material-icons-round text-decoration-none">more_vert</a>
+        </div>
+
+        <!-- body -->
+        <div class="d-flex flex-column flex-grow-1">
+            <div class="container">
+                <form id="addTaskForm" class="m-5 mt-0">
+                    <div id="out" class="py-2 text-danger"></div>
+                    <label class="mt-3" for="taskTitle">TItle</label>
+                    <input class="form-control" type="text" name="taskTitle" id="taskTitle" required>
+
+                    <label class="mt-3" for="taskCustomerName">Customer Name</label>
+                    <input class="form-control" type="text" name="taskCustomerName" id="taskCustomerName" required>
+
+                    <label class="mt-3" for="taskCustomerPhone">Customer Phone</label>
+                    <input class="form-control" type="tel" name="taskCustomerPhone" id="taskCustomerPhone" required>
+
+                    <label class="mt-3" for="taskPayment">Payment Made</label>
+                    <input class="form-control" type="number" name="taskPayment" id="taskPayment" required>
+
+
+                    <label class="mt-3" for="taskStatus">Task Status</label>
+                    <select class="form-select" name="taskStatus" id="taskStatus" required>
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Finished">Finished</option>
+                    </select>
+
+                    <button class="mt-4 btn btn-primary w-100">Add</button>
+                    <input type="hidden" name="taskAssignedTo" id="taskAssignedTo">
+                    <input type="hidden" name="addTask">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        var employeeData = JSON.parse(localStorage.getItem("active_employeeData"));
+
+        $("#taskAssignedTo").val(employeeData["email"]);
+
+        $("#addTaskForm").submit(function (e) {
+            e.preventDefault();
+
+            out = $("#out");
+
+            $.ajax({
+                url: "/advolog-backend/tasks.php",
+                data: $("#addTaskForm").serialize(),
+                type: "post",
+                success: function (e) {
+                    e = JSON.parse(e);
+                    if (e["response"] == "success") {
+                        window.location.href = "pages/employee/";
+                    }
+                },
+                error: function () {
+                    out.html("Something went wrong.");
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

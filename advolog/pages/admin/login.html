@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="../../">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <title>Admin Login</title>
+    <script>
+        if (localStorage.getItem("active_admin") !== null) {
+            window.location.href = "pages/admin/";
+        }
+    </script>
+</head>
+
+<body>
+
+    <!-- activity -->
+    <div class="d-flex flex-column vh-100">
+
+        <!-- header -->
+        <div class="d-flex align-items-center bg-light border-bottom shadow-sm p-3">
+            <a href="" class="material-icons-round text-decoration-none">arrow_back</a>
+            <div class="m-0 mx-3 h4">Admin</div>
+            <div class="flex-grow-1"></div>
+        </div>
+
+        <!-- body -->
+        <div class="d-flex flex-column flex-grow-1">
+
+            <div class="container">
+
+                <form id="AdminSigninForm" class="m-5">
+
+                    <h3>Login</h3>
+
+                    <div id="output" class="text-danger my-3"></div>
+
+                    <label for="AdminSigninEmail">Email Address</label>
+                    <input class="form-control" type="email" name="AdminSigninEmail" id="AdminSigninEmail" required>
+
+                    <label for="AdminSigninPassword">Password</label>
+                    <input class="form-control" type="password" name="AdminSigninPassword" id="AdminSigninPassword" required>
+
+                    <input class="btn btn-primary w-100 my-3" type="submit" value="Login" name="AdminSignin">
+                    <input type="hidden" name="AdminSignin">
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script src="assets/js/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        $("#AdminSigninForm").submit(function (e) {
+
+            e.preventDefault();
+            let out = $("#output");
+            
+            $.ajax({
+                url: "/advolog-backend/auth.php",
+                type: "post",
+                data: $("#AdminSigninForm").serialize(),
+                success: function (d) {
+                    console.log(d);
+                    d = JSON.parse(d);
+                    if (d["message"] === "SUCCESS") {
+                        localStorage.setItem("active_admin", d["email"]);
+                        localStorage.setItem("active_adminData", JSON.stringify(d));
+                        window.location.reload();
+                    }
+                    else if (d["message"] === "NO_ACCOUNT_EXISTS") {
+                        out.html("No account found.")
+                    } else if (d["message"] === "INCORRECT_PASSWORD") {
+                        out.html("Incorrect password.");
+                    }
+                },
+                error: function (d) {
+                    out.html("Unable to reach the server");
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

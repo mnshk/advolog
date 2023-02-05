@@ -1,0 +1,40 @@
+@font-face {
+    font-family: "Material Icons Round";
+    font-style: normal;
+    font-weight: 400;
+    src: url("MaterialIconsRound-Regular.otf");
+}
+
+.material-icons-round {
+    font-family: "Material Icons Round";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "liga";
+}
+
+.material-icons-round.md-18 {
+    font-size: 18px;
+}
+
+.material-icons-round.md-24 {
+    font-size: 24px;
+}
+
+.material-icons-round.md-36 {
+    font-size: 36px;
+}
+
+.material-icons-round.md-48 {
+    font-size: 48px;
+}

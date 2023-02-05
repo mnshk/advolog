@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="../../">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <title>Employee Reset</title>
+</head>
+
+<body>
+
+    <!-- activity -->
+    <div class="d-flex flex-column vh-100">
+
+        <!-- header -->
+        <div class="d-flex align-items-center bg-light border-bottom shadow-sm p-3">
+            <a href="pages/employee" class="material-icons-round text-decoration-none">arrow_back</a>
+            <div class="m-0 mx-3 h4">Employee</div>
+            <div class="flex-grow-1"></div>
+        </div>
+
+        <!-- body -->
+        <div class="d-flex flex-column flex-grow-1">
+            <div class="container">
+                <form class="m-5" id="EmployeeResetForm">
+                    <h3>Reset</h3>
+                    <div id="output" class="text-danger my-3"></div>
+                    <label class="mt-2" for="EmployeeResetEmail">Email Address</label>
+
+                    <input class="form-control" type="email" name="EmployeeResetEmail" id="EmployeeResetEmail" required>
+                    <div class="alert alert-warning my-3">A verification code will be<br>sent to your email address.</div>
+
+                    <input class="btn btn-primary w-100 my-3" type="submit" value="Send Code" name="EmployeeReset">
+                    <input type="hidden" name="EmployeeReset">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        $("#EmployeeResetForm").submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "/advolog-backend/auth.php",
+                type: "post",
+                data: $("#EmployeeResetForm").serialize(),
+                success: function (d) {
+                    console.log(d);
+                    d = JSON.parse(d);
+                    $("#output").html("Something went wrong.");
+                    if (d["message"] === "NO_ACCOUNT_EXISTS") {
+                        $("#output").html("No account found.");
+                    }
+                },
+                error: function (d) {
+                    $("#output").html("Unable to reach the server");
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

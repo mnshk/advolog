@@ -1,0 +1,78 @@
+@import url("bootstrap.min.css");
+@import url("../fonts/material-icon/material-icon.css");
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+
+body {
+    animation: page-load 200ms;
+
+    font-family: "Nunito";
+}
+@keyframes page-load {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+}
+
+.mk-side-navbar-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: 200ms;
+    background-color: rgba(0, 0, 0, 0);
+    visibility: visible;
+    visibility: hidden;
+}
+
+.mk-side-navbar-wrapper .mk-side-navbar {
+    height: 100vh;
+    width: 250px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    left: -260px;
+}
+
+.mk-side-navbar-wrapper-open .mk-side-navbar {
+    left: 0;
+    transition: 200ms;
+}
+
+.mk-side-navbar-wrapper-open {
+    visibility: visible;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+}
+
+.mk-side-navbar div:hover {
+    background-color: #e0e0e0;
+}
+
+.viewTaskWrapper {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    visibility: hidden;
+    transition: 200ms;
+    z-index: 999;
+}
+
+.viewTask {
+    min-width: 80vw;
+    border-radius: 8px;
+}
+
+.viewTaskWrapperActive {
+    opacity: 1;
+    visibility: visible;
+    backdrop-filter: blur(4px);
+}
